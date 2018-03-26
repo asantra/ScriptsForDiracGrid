@@ -163,7 +163,9 @@ for n in xrange(0, len(betaName)):
                     sh_run_ganga_name  = 'run_lhe_v49r8_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.sh'
                     
 
-                    #
+                    # 
+                    '''
+                    
                     print 'LHE sample LFN: ', lhe_location
                     print 'cfg path: ', cfg_path
                     print 'first event number: ', first_event_number
@@ -182,6 +184,8 @@ for n in xrange(0, len(betaName)):
                     print 'cfg_path: ', cfg_path
                     print 'sh_run_ganga_name: ', sh_run_ganga_name
                     print("*********************************")
+                    
+                    '''
 
                     
 
@@ -220,14 +224,14 @@ for n in xrange(0, len(betaName)):
                     
                     # Create the run_lhe_v49r8.sh file which will run the gaudirun  
                     copyfile('run_lhe_v49r8_TEMPLATE.sh', sh_run_ganga_name)
+                    
                     replace_text(sh_run_ganga_name, "CFGNAME", "%s" % (cfg_ganga_lhe_name))
+                    
                     replace_text(sh_run_ganga_name, "LOGNAME", "%s" % (outputlog))
+                    
                     replace_text(sh_run_ganga_name, "ROOTFILE", "%s" % (outputmonopole))
                     
-                    
-                    
                     # Create the job.
-                    exit()
                     j = Job()
                     # Set the job name (using the cfg name).
                     j.name = job_name
