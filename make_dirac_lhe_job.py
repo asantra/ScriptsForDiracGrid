@@ -117,10 +117,10 @@ for n in xrange(0, len(betaName)):
 
                     ## The LHE generation run name.
                     #lhe_run_name = 'run_01'
-                    lhe_run_name = 'RunName_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom  ### modified by Arka
+                    lhe_run_name   = 'RunName_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom  ### modified by Arka
                     outputmonopole = 'MonopoleData_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.root'
-                    outputgen = 'GenData_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.root'
-                    outputlog = 'log.run.'+beta+'.'+spin+'.'+charge+'.'+run+'.'+keyGeom+'.txt'
+                    outputgen      = 'GenData_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.root'
+                    outputlog      = 'log.run.'+beta+'.'+spin+'.'+charge+'.'+run+'.'+keyGeom+'.txt'
 
                     ## The monopole magnetic charge [q_D].
                     monopole_magnetic_charge = i+1
@@ -142,7 +142,7 @@ for n in xrange(0, len(betaName)):
                     #spin     = magnetic_monopole_spin
 
                     ## The job name.
-                    job_name = "%s_PhotonFusion_%s_%s_%s" % (com, mag_chrg, mass, batch_name)
+                    job_name = "%s_PhotonFusion_%s" % (com, batch_name)
 
                     ## The name of the configuration.
                     cfg_name = "cfg_" + job_name
@@ -177,6 +177,7 @@ for n in xrange(0, len(betaName)):
                     print 'genData: ', outputgen
                     print 'logFile: ', outputlog
                     print 'cfg_ganga_lhe_name: ', cfg_ganga_lhe_name
+                    print 'cfg_path: ', cfg_path
                     print("*********************************")
 
                     
