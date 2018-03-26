@@ -32,7 +32,7 @@ lhe_file_basename = "unweighted_events.lhe"
 lfn_path = '/vo.moedal.org/sim/13TEVYY/FilesByArka/SecondTryMarch22/MoEDAL_LHEFiles'
 
 ## The geometry DB file location in CVMFS.
-geometry_db_file_location = "/cvmfs/moedal.cern.ch/Gauss/Geometry/2-0-0"
+geometry_db_file_location = "/cvmfs/moedal.cern.ch/Gauss/Geometry/3-1-0"
 #geometry_db_file_location = "/cvmfs/moedal.cern.ch/Gauss/Geometry/2-2-0"
 
 ## The magnetic monopole electric charge [e].
@@ -160,6 +160,8 @@ for n in xrange(0, len(betaName)):
                     
                     cfg_ganga_lhe_name = 'cfg_ganga_lhe_run_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.py'
                     
+                    sh_run_ganga_name  = 'run_lhe_v49r8_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.sh'
+                    
 
                     #
                     print 'LHE sample LFN: ', lhe_location
@@ -178,6 +180,7 @@ for n in xrange(0, len(betaName)):
                     print 'logFile: ', outputlog
                     print 'cfg_ganga_lhe_name: ', cfg_ganga_lhe_name
                     print 'cfg_path: ', cfg_path
+                    print 'sh_run_ganga_name: ', sh_run_ganga_name
                     print("*********************************")
 
                     
@@ -212,19 +215,25 @@ for n in xrange(0, len(betaName)):
 
                     # Add config to the inputfiles list (LocalFile).
 
-                    
-
                     # Create a copy of the configuration file to use in the job.
                     copyfile(cfg_path, cfg_ganga_lhe_name)
-
-                    exit()
+                    
+                    # Create the run_lhe_v49r8.sh file which will run the gaudirun  
+                    copyfile('run_lhe_v49r8_TEMPLATE.sh', sh_run_ganga_name)
+                    replace_text(sh_run_ganga_name, "CFGNAME", "%s" % (cfg_ganga_lhe_name))
+                    replace_text(sh_run_ganga_name, "LOGNAME", "%s" % (outputlog))
+                    replace_text(sh_run_ganga_name, "ROOTFILE", "%s" % (outputmonopole))
+                    
+                    
+                    
                     # Create the job.
+                    exit()
                     j = Job()
                     # Set the job name (using the cfg name).
                     j.name = job_name
                     j.application = Executable()
                     #j.application.exe = File('run_lhe_v48r1.sh')
-                    j.application.exe = File('run_lhe_v49r7.sh')
+                    j.application.exe = File(sh_run_ganga_name)
                     j.application.args = []
 
                     # DIRAC running
