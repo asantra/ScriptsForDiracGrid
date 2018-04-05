@@ -44,7 +44,7 @@ com_energy = '13TeV'
 ## The magnetic monopole spin.
 
 
-
+counter = 0 
 
 
 
@@ -85,20 +85,28 @@ for n in xrange(0, len(betaName)):
         prefix = 'No'
     else:
         prefix = ''
-        
+    
+    if counter > 1:
+        break
     ### loop over the spins
     for k in xrange(0, len(magnetic_monopole_spin)):
         spin = magnetic_monopole_spin[k]
-        
+        if counter > 1:
+            break
         ### loop over the charges
         for i in xrange(0, len(monopole_magnetic_charges)):
             charge = monopole_magnetic_charges[i]
-            
+            if counter > 1:
+                break
             ### loop over the monopole masses
             for keyMass in monopole_masses:
-                
+                if counter > 1:
+                    break
                 ### loop over the different geometries
                 for keyGeom in geometries:
+                    if counter > 1:
+                        break
+                        
                     run = monopole_masses[keyMass]
                     ## The batch name.
                     batch_name = 'myRun_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom
@@ -109,7 +117,7 @@ for n in xrange(0, len(betaName)):
                     first_event_number = 1
 
                     ## The number of events to run.
-                    number_of_events = 10000
+                    number_of_events = 50
                     
 
                     ## The monopole mass [GeV]
@@ -139,7 +147,7 @@ for n in xrange(0, len(betaName)):
                     geo      = geometry_name
                     mag_chrg = monopole_magnetic_charge_label
                     mass     = "m%d" % (monopole_mass)
-                    #spin     = magnetic_monopole_spin
+                    #spin     = magnetic_monopole_spin #### spin was defined before
 
                     ## The job name.
                     job_name = "%s_PhotonFusion_%s" % (com, batch_name)
@@ -243,16 +251,18 @@ for n in xrange(0, len(betaName)):
                     # DIRAC running
                     j.inputfiles = [LocalFile(cfg_path), LocalFile(cfg_ganga_lhe_name), DiracFile(lhe_location)]
 
-                    # Output files will be remotely stored, and can be retrieved from vo.moedal.org/user/...
-                    j.outputfiles = [ DiracFile(outputmonopole), DiracFile(outputgen), DiracFile('ParticlePropertySvc_Monopole.txt'), DiracFile(outputlog), DiracFile(cfg_path) ]
+                    # Output files will be remotely stored, and can be retrieved from vo.moedal.org/user/a/asantra/LocalXML(?)...
+                    #j.outputfiles = [ DiracFile(outputmonopole), DiracFile(outputgen), DiracFile('ParticlePropertySvc_Monopole.txt'), DiracFile(outputlog), DiracFile(cfg_path) ]
 
-                    # Output files will be locally stored, in $HOME/gangadir/workspace/gridpp/LocalXML
-                    #j.outputfiles = [ LocalFile('MonopoleData.root'), LocalFile('GenData.root'), LocalFile('ParticlePropertySvc_Monopole.txt'), LocalFile('log.run.txt'), LocalFile(cfg_path) ]
+                    # Output files will be locally stored, in $HOME/gangadir/workspace/asantra/LocalXML
+                    j.outputfiles = [ LocalFile(outputmonopole), LocalFile(outputgen), LocalFile('ParticlePropertySvc_Monopole.txt'), LocalFile(outputlog), LocalFile(cfg_path) ]
 
                     j.backend = Dirac()
 
                     # Uncomment when ready to submit automatically.
-                    #j.submit()
+                    j.submit()
+                    
+                    counter = counter+1
 
 
 
