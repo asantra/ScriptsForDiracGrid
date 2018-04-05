@@ -135,61 +135,78 @@ geo = GiGaInputStream('Geo')
 geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/VacTankCoverPipes" ]
 geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/VacTankCoverHead" ]
 
-## When using tag 2.2.0, please activate the VacTankTopFlanges
-#geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/VacTankTopFlanges" ]
+## When using tags above or equal to 3.0.0, please activate the VacTankTopFlanges
+geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/VacTankTopFlanges" ]
 
 geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/DetectorVacuum" ]
 geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/VacuumPump" ]
 geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/VeloDustCover" ]
 geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/ExtraMaterial" ]
-
 geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/VacuumManifolds" ]
 
-geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT1" ]
-geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT2" ]
-geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT3" ]
+## When using tags above or equal 3.0.0, please activate : DetectorVacuumHood, SideElectronicCrates, RepeaterBoards, and VeloCables
+geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/DetectorVacuumHood" ]
+geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/SideElectronicCrates" ]
+geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/RepeaterBoards" ]
+geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/VeloCables" ]
+
+## !! Attention !! : When using tag 3.0.0 (Run 2), please activate MMT1, MMT2, MMT3, and NTD2015 and deactivate : MMT2014, and NTDRun1 !!
+#geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT1" ]
+#geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT2" ]
+#geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT3" ]
+#geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/NTD2015" ]
+
+## !! Attention !! : When using tag 3.1.0 (Run 1), please activate MMT2014, and NTDRun1 and deactivate : MMT1, MMT2, MMT3, and NTD2015 !!
+geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT2014" ]
+geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/NTDRun1" ]
+
 geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/HCC2015" ]
-geo.StreamItems += [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/NTD2015" ]
 
+############################################################################
+## Activate MMT, HCC, and NTD sensitive detectors
+from Configurables import GetMMTHitsAlg, GetNTDHitsAlg
 
-##############################################################################
-# Subdetector management
-##############################################################################
+## !! Attention !! : When using tag 3.0.0 (Run 2), please activate MMT1, MMT2, MMT3 and deactivate : MMT2014 !!
+#getMMTHits = GetMMTHitsAlg("GetMMTHits")
+#getMMTHits.CollectionName = "MMT/Hits"
+#getMMTHits.MCHitsLocation = "/Event/MC/MMT/Hits"
+#getMMTHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT1" ]
+#GaudiSequencer("DetectorsHits").Members += [ getMMTHits ]
 
-# Activate MMT, HCC, and NTD sensitive detectors
+#getMMTHits = GetMMTHitsAlg("GetMMTHits")
+#getMMTHits.CollectionName = "MMT/Hits"
+#getMMTHits.MCHitsLocation = "/Event/MC/MMT/Hits"
+#getMMTHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT2" ]
+#GaudiSequencer("DetectorsHits").Members += [ getMMTHits ]
 
+#getMMTHits = GetMMTHitsAlg("GetMMTHits")
+#getMMTHits.CollectionName = "MMT/Hits"
+#getMMTHits.MCHitsLocation = "/Event/MC/MMT/Hits"
+#getMMTHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT3" ]
+#GaudiSequencer("DetectorsHits").Members += [ getMMTHits ]
+
+## !! Attention !! : When using tag 3.1.0 (Run 1), please activate MMT2014 and deactivate : MMT1, MMT2, MMT3 !!
 getMMTHits = GetMMTHitsAlg("GetMMTHits")
 getMMTHits.CollectionName = "MMT/Hits"
 getMMTHits.MCHitsLocation = "/Event/MC/MMT/Hits"
-getMMTHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT1" ]
+getMMTHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT2014" ]
 GaudiSequencer("DetectorsHits").Members += [ getMMTHits ]
 
-getMMTHits = GetMMTHitsAlg("GetMMTHits")
-getMMTHits.CollectionName = "MMT/Hits"
-getMMTHits.MCHitsLocation = "/Event/MC/MMT/Hits"
-getMMTHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT2" ]
-GaudiSequencer("DetectorsHits").Members += [ getMMTHits ]
+## !! Attention !! : If using tag 3.0.0 (Run 2), please activate NTD2015 and deactivate : NTDRun1 !!
+## !! Attention !! : If using tag 3.1.0 (Run 1), please activate NTDRun1 and deactivate : NTD2015 !!
+getNTDHits = GetNTDHitsAlg("GetNTDHits")
+getNTDHits.CollectionName = "NTD/Hits"
+getNTDHits.MCHitsLocation = "/Event/MC/NTD/Hits"
+#getNTDHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/NTD2015" ]
+getNTDHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/NTDRun1" ]
+GaudiSequencer("DetectorsHits").Members += [ getNTDHits ]
 
-getMMTHits = GetMMTHitsAlg("GetMMTHits")
-getMMTHits.CollectionName = "MMT/Hits"
-getMMTHits.MCHitsLocation = "/Event/MC/MMT/Hits"
-getMMTHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/MMT3" ]
-GaudiSequencer("DetectorsHits").Members += [ getMMTHits ]
-
+## Disable NTD hit retrieval when NTDs are disabled in geometry
 getNTDHits = GetNTDHitsAlg("GetNTDHits")
 getNTDHits.CollectionName = "NTD/Hits"
 getNTDHits.MCHitsLocation = "/Event/MC/NTD/Hits"
 getNTDHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/HCC2015" ]
-## Disable NTD hit retrieval when NTDs are disabled in geometry
 GaudiSequencer("DetectorsHits").Members += [ getNTDHits ]
-
-getNTDHits = GetNTDHitsAlg("GetNTDHits")
-getNTDHits.CollectionName = "NTD/Hits"
-getNTDHits.MCHitsLocation = "/Event/MC/NTD/Hits"
-getNTDHits.Detectors      = [ "/dd/Structure/LHCb/BeforeMagnetRegion/MoEDAL/NTD2015" ]
-## Disable NTD hit retrieval when NTDs are disabled in geometry
-GaudiSequencer("DetectorsHits").Members += [ getNTDHits ]
-
 
 ##############################################################################
 # Define the MoEDAL option variables
@@ -199,8 +216,6 @@ GaudiSequencer("DetectorsHits").Members += [ getNTDHits ]
 
 ## The magnetic monopole PDG ID.
 monopole_pdg       = 4110000 #shouldn't coincide with other particles
-
-#monopole_mass      = 1000 # [GeV]
 
 ## The magnetic monopole mass [GeV].
 monopole_mass      = MONOPOLE_MASS_GEV # [GeV]
@@ -244,7 +259,7 @@ LHCbApp().EvtMax = NUMBER_OF_EVENTS
 ## The output filename.
 MonopoleTupleAlg().OutputNtupleFilename = "MONOPOLE_DATA_ROOT"
 
-## Should we read the NTD hits?
+## Reading the NTD hits
 MonopoleTupleAlg().ReadNTDHits = True
 
 ## The generator information output filename.

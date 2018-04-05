@@ -88,8 +88,8 @@ source setup.sh
 echo "*...done."
 cd ${NEWPROJECTPATH}
 
-echo "* Preparing the (modified) Gen package..."
-cd Gen/cmt
+echo "* Preparing the (modified) LbPythia package..."
+cd Gen/LbPythia/cmt
 cmt config
 source setup.sh
 #make
