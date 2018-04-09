@@ -86,26 +86,26 @@ for n in xrange(0, len(betaName)):
     else:
         prefix = ''
     
-    if counter > 1:
-        break
+    #if counter > 1:
+        #break
     ### loop over the spins
     for k in xrange(0, len(magnetic_monopole_spin)):
         spin = magnetic_monopole_spin[k]
-        if counter > 1:
-            break
+        #if counter > 2:
+            #break
         ### loop over the charges
         for i in xrange(0, len(monopole_magnetic_charges)):
             charge = monopole_magnetic_charges[i]
-            if counter > 1:
-                break
+            #if counter > 2:
+                #break
             ### loop over the monopole masses
             for keyMass in monopole_masses:
-                if counter > 1:
-                    break
+                #if counter > 2:
+                    #break
                 ### loop over the different geometries
                 for keyGeom in geometries:
-                    if counter > 1:
-                        break
+                    #if counter > 2:
+                        #break
                         
                     run = monopole_masses[keyMass]
                     ## The batch name.
@@ -117,7 +117,7 @@ for n in xrange(0, len(betaName)):
                     first_event_number = 1
 
                     ## The number of events to run.
-                    number_of_events = 50
+                    number_of_events = 10000
                     
 
                     ## The monopole mass [GeV]
@@ -129,6 +129,7 @@ for n in xrange(0, len(betaName)):
                     outputmonopole = 'MonopoleData_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.root'
                     outputgen      = 'GenData_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.root'
                     outputlog      = 'log.run.'+beta+'.'+spin+'.'+charge+'.'+run+'.'+keyGeom+'.txt'
+                    
 
                     ## The monopole magnetic charge [q_D].
                     monopole_magnetic_charge = i+1
@@ -226,11 +227,12 @@ for n in xrange(0, len(betaName)):
                     replace_text(cfg_path, "GEN_DATA_ROOT", "%s" % (outputgen))
 
                     # Add config to the inputfiles list (LocalFile).
-
+                    
                     # Create a copy of the configuration file to use in the job.
                     copyfile(cfg_path, cfg_ganga_lhe_name)
                     
-                    # Create the run_lhe_v49r8.sh file which will run the gaudirun  
+                    # Create the run_lhe_v49r8.sh file which will run the gaudirun 
+                    
                     copyfile('run_lhe_v49r8_TEMPLATE.sh', sh_run_ganga_name)
                     
                     replace_text(sh_run_ganga_name, "CFGNAME", "%s" % (cfg_ganga_lhe_name))
@@ -239,23 +241,28 @@ for n in xrange(0, len(betaName)):
                     
                     replace_text(sh_run_ganga_name, "ROOTFILE", "%s" % (outputmonopole))
                     
+                    os.chmod(sh_run_ganga_name, 0755)
+                    
+                    
                     # Create the job.
                     j = Job()
                     # Set the job name (using the cfg name).
                     j.name = job_name
                     j.application = Executable()
-                    #j.application.exe = File('run_lhe_v48r1.sh')
+                    #j.application.exe = File('run_lhe_v49r8.sh')
                     j.application.exe = File(sh_run_ganga_name)
                     j.application.args = []
 
                     # DIRAC running
                     j.inputfiles = [LocalFile(cfg_path), LocalFile(cfg_ganga_lhe_name), DiracFile(lhe_location)]
+                    ### j.inputfiles = [LocalFile(cfg_path), LocalFile('cfg_ganga_lhe_run.py'), DiracFile(lhe_location)]
+                    
 
-                    # Output files will be remotely stored, and can be retrieved from vo.moedal.org/user/a/asantra/LocalXML(?)...
-                    #j.outputfiles = [ DiracFile(outputmonopole), DiracFile(outputgen), DiracFile('ParticlePropertySvc_Monopole.txt'), DiracFile(outputlog), DiracFile(cfg_path) ]
+                    # Output files will be remotely stored, and can be retrieved from /vo.moedal.org/user/a/arka.santra.csic.es/...
+                    j.outputfiles = [ DiracFile(outputmonopole), DiracFile(outputgen), DiracFile('ParticlePropertySvc_Monopole.txt'), DiracFile(outputlog), DiracFile(cfg_path) ]
 
                     # Output files will be locally stored, in $HOME/gangadir/workspace/asantra/LocalXML
-                    j.outputfiles = [ LocalFile(outputmonopole), LocalFile(outputgen), LocalFile('ParticlePropertySvc_Monopole.txt'), LocalFile(outputlog), LocalFile(cfg_path) ]
+                    #j.outputfiles = [ LocalFile(outputmonopole), LocalFile(outputgen), LocalFile('ParticlePropertySvc_Monopole.txt'), LocalFile(outputlog), LocalFile(cfg_path) ]
 
                     j.backend = Dirac()
 
