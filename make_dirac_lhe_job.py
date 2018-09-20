@@ -29,10 +29,11 @@ run_number = 1082
 lhe_file_basename = "unweighted_events.lhe"
 
 ## The base LHE file directory.
-lfn_path = '/vo.moedal.org/sim/13TEVYY/FilesByArka/SecondTryMarch22/MoEDAL_LHEFiles'
+#lfn_path = '/vo.moedal.org/sim/13TEVYY/FilesByArka/SecondTryMarch22/MoEDAL_LHEFiles' ### grid path
+lfn_path = '/eos/user/a/asantra/MadGraphLHEFiles/'  ### local path
 
 ## The geometry DB file location in CVMFS.
-geometry_db_file_location = "/cvmfs/moedal.cern.ch/Gauss/Geometry/3-1-0"
+geometry_db_file_location = "/cvmfs/moedal.cern.ch/Gauss/Geometry/3-0-0"
 #geometry_db_file_location = "/cvmfs/moedal.cern.ch/Gauss/Geometry/2-2-0"
 
 ## The magnetic monopole electric charge [e].
@@ -77,40 +78,45 @@ geometries = {                       \
     'minimal':'geometry_minimal.db'}
 
 
-
-
+shortJobs = False
+nOfJobs   = 4
 for n in xrange(0, len(betaName)):
     beta = betaName[n]
     if n == 0:
         prefix = 'No'
     else:
         prefix = ''
-    
-    #if counter > 1:
-        #break
+    boolCount = (counter > nOfJobs)
+    if(shortJobs and boolCount):
+        break
     ### loop over the spins
     for k in xrange(0, len(magnetic_monopole_spin)):
         spin = magnetic_monopole_spin[k]
-        #if counter > 2:
-            #break
+        if(shortJobs and boolCount):
+           break
         ### loop over the charges
         for i in xrange(0, len(monopole_magnetic_charges)):
             charge = monopole_magnetic_charges[i]
-            #if counter > 2:
-                #break
+            if(shortJobs and boolCount):
+                break
             ### loop over the monopole masses
             for keyMass in monopole_masses:
-                #if counter > 2:
-                    #break
+                if(shortJobs and boolCount):
+                    break
                 ### loop over the different geometries
                 for keyGeom in geometries:
-                    #if counter > 2:
-                        #break
+                    if(shortJobs and boolCount):
+                        break
                         
                     run = monopole_masses[keyMass]
                     ## The batch name.
                     batch_name = 'myRun_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom
-
+                    
+                    #/eos/user/a/asantra/MadGraphLHEFiles/betaIndependent/SpinZero/q10/run_10
+                    if beta != "betaDependent": continue
+                    if spin != "SpinOne"      : continue
+                    if charge != "q10"        : continue
+                    if run   != "run_04"      : continue
                     # Global configuration variables.
 
                     ## The first event number.
@@ -156,14 +162,14 @@ for n in xrange(0, len(betaName)):
                     ## The name of the configuration.
                     cfg_name = "cfg_" + job_name
                     #
-                    print("* Configuration filename: '%s'" % (cfg_name))
+                    
 
                     ## The path of the configuration file.
                     cfg_path = cfg_name + ".py"
 
                     ## The location of the LHE file on the DIRAC File Catalog.
 
-                    lhe_location = 'LFN:%s/%s/%s/%s/%s/unweighted_events.lhe' % (lfn_path, beta, spin, charge, run) ## done by Arka
+                    lhe_location = '%s/%s/%s/%s/%s/unweighted_events.lhe' % (lfn_path, beta, spin, charge, run) ## done by Arka
                     
                     # Add the LFN to the inputfiles list (DiracFile).
                     
@@ -171,10 +177,16 @@ for n in xrange(0, len(betaName)):
                     
                     sh_run_ganga_name  = 'run_lhe_v49r8_'+beta+'_'+spin+'_'+charge+'_'+run+'_'+keyGeom+'.sh'
                     
+                    print("*")
+                    print("* Configuration filename: '%s'" % (cfg_name))
+                    print("* lhe_location: '%s'" % (lhe_location))
+                    print("* cfg name    : '%s'" % (cfg_ganga_lhe_name))
+                    print("* sh_name     : '%s'"% (sh_run_ganga_name))
+                    
 
                     # 
-                    '''
                     
+                    '''
                     print 'LHE sample LFN: ', lhe_location
                     print 'cfg path: ', cfg_path
                     print 'first event number: ', first_event_number
@@ -192,9 +204,10 @@ for n in xrange(0, len(betaName)):
                     print 'cfg_ganga_lhe_name: ', cfg_ganga_lhe_name
                     print 'cfg_path: ', cfg_path
                     print 'sh_run_ganga_name: ', sh_run_ganga_name
+                    print 'lhe_run_name', lhe_run_name
                     print("*********************************")
-                    
                     '''
+                    
 
                     
 
@@ -242,8 +255,8 @@ for n in xrange(0, len(betaName)):
                     replace_text(sh_run_ganga_name, "ROOTFILE", "%s" % (outputmonopole))
                     
                     os.chmod(sh_run_ganga_name, 0755)
-                    
-                    
+                    counter = counter+1
+                    #continue
                     # Create the job.
                     j = Job()
                     # Set the job name (using the cfg name).
@@ -259,17 +272,17 @@ for n in xrange(0, len(betaName)):
                     
 
                     # Output files will be remotely stored, and can be retrieved from /vo.moedal.org/user/a/arka.santra.csic.es/...
-                    j.outputfiles = [ DiracFile(outputmonopole), DiracFile(outputgen), DiracFile('ParticlePropertySvc_Monopole.txt'), DiracFile(outputlog), DiracFile(cfg_path) ]
+                    #j.outputfiles = [ DiracFile(outputmonopole), DiracFile(outputgen), DiracFile('ParticlePropertySvc_Monopole.txt'), DiracFile(outputlog), DiracFile(cfg_path) ]
 
                     # Output files will be locally stored, in $HOME/gangadir/workspace/asantra/LocalXML
-                    #j.outputfiles = [ LocalFile(outputmonopole), LocalFile(outputgen), LocalFile('ParticlePropertySvc_Monopole.txt'), LocalFile(outputlog), LocalFile(cfg_path) ]
+                    j.outputfiles = [ LocalFile(outputmonopole), LocalFile(outputgen), LocalFile('ParticlePropertySvc_Monopole.txt'), LocalFile(outputlog), LocalFile(cfg_path) ]
 
                     j.backend = Dirac()
 
                     # Uncomment when ready to submit automatically.
                     j.submit()
                     
-                    counter = counter+1
+                    
 
 
 
